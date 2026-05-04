@@ -1,0 +1,166 @@
+---
+const sections = [
+  {
+    id: 'what-is-cdc',
+    title: 'CDC là gì?',
+    content: `Change Data Capture (CDC) là kỹ thuật theo dõi và capture các thay đổi trong database một cách real-time. Thay vì polling toàn bộ database, CDC chỉ capture những thay đổi (INSERT, UPDATE, DELETE) và streaming chúng sang hệ thống khác.
+
+**Các phương pháp CDC phổ biến:**
+- **Log-based**: MySQL Binlog, PostgreSQL WAL - chính xác, low latency
+- **Query-based**: Timestamp-based polling - đơn giản nhưng có latency
+- **Trigger-based**: Database triggers - flexible nhưng impact performance`,
+  },
+  {
+    id: 'why-cdc',
+    title: 'Tại sao dùng CDC?',
+    content: `CDC mang lại nhiều lợi ích cho data architecture hiện đại:
+
+**1. Near Real-time**
+- Latency chỉ vài milliseconds thay vì hours
+- Analytics luôn fresh
+
+**2. Zero Downtime**
+- Không cần batch jobs chạy ban đêm
+- Không lock tables khi sync
+
+**3. Audit Trail đầy đủ**
+- Mọi thay đổi đều được ghi lại
+- Dễ dàng replay nếu cần
+
+**4. Decoupled Systems**
+- Source DB không bị ảnh hưởng bởi consumers
+- Nhiều consumers có thể subscribe cùng lúc`,
+  },
+  {
+    id: 'debezium',
+    title: 'Debezium',
+    content: `Debezium là open-source CDC platform được build trên Apache Kafka Connect.
+
+**Supported Databases:**
+- MySQL (via binlog)
+- PostgreSQL (via WAL)
+- MongoDB
+- SQL Server
+- Oracle
+- Db2
+
+**Architecture:**
+\`\`\`
+MySQL → Debezium Connector → Kafka Topic → Sink Connector → Lakehouse
+\`\`\`
+
+**Key Features:**
+- Transaction order guarantee
+- Schema evolution support
+- Exactly-once processing`,
+  },
+  {
+    id: 'lakehouse',
+    title: 'Lakehouse Architecture',
+    content: `Lakehouse pattern tổ chức data theo layers:
+
+**Bronze Layer (Raw)**
+- Lưu trữ raw CDC data
+- Schema unchanged từ source
+- Full history retention
+- Parquet format với columnar storage
+
+**Silver Layer (Cleaned)**
+- Deduplicated records
+- Type casting & validation
+- NULL handling
+- Business logic applied
+
+**Gold Layer (Business)**
+- Pre-aggregated metrics
+- Dimension tables denormalized
+- ML training datasets
+- BI dashboards ready
+
+**Tools:**
+- Apache Spark, Flink cho processing
+- Delta Lake, Iceberg cho storage
+- Grafana, Superset cho visualization`,
+  },
+  {
+    id: 'setup-mysql',
+    title: 'Setup MySQL cho CDC',
+    content: `**1. Enable Binlog**
+
+Edit \`my.cnf\`:
+\`\`\`ini
+[mysqld]
+server-id = 1
+log_bin = mysql-bin
+binlog_format = ROW
+binlog_row_image = FULL
+expire_logs_days = 10
+\`\`\`
+
+**2. Create Debezium User**
+\`\`\`sql
+CREATE USER 'debezium'@'%' IDENTIFIED BY 'password';
+GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'debezium';
+GRANT ALL PRIVILEGES ON *.* TO 'debezium';
+FLUSH PRIVILEGES;
+\`\`\`
+
+**3. Verify Binlog**
+\`\`\`sql
+SHOW MASTER STATUS;
+\`\`\``,
+  },
+  {
+    id: 'config-debezium',
+    title: 'Config Debezium Connector',
+    content: `**Register MySQL Connector:**
+
+\`\`\`json
+{
+  "name": "mysql-cdc-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+    "tasks.max": "1",
+    "database.hostname": "mysql",
+    "database.port": "3306",
+    "database.user": "debezium",
+    "database.password": "password",
+    "database.server.id": "184054",
+    "topic.prefix": "mysql",
+    "database.include.list": "mydb",
+    "schema.history.internal.kafka.bootstrap.servers": "kafka:9092",
+    "schema.history.internal.kafka.topic": "schema-changes"
+  }
+}
+\`\`\``,
+  },
+];
+---
+
+<article class="flex-1 p-8 overflow-y-auto">
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold text-emerald-400">Tài liệu CDC Lakehouse</h1>
+    <p class="text-slate-400 mt-2">Hướng dẫn triển khai Change Data Capture với Lakehouse Architecture</p>
+  </header>
+
+  <div class="space-y-12">
+    {sections.map(section => (
+      <section id={section.id}>
+        <h2 class="text-2xl font-semibold text-slate-200 mb-4">{section.title}</h2>
+        <div class="prose prose-invert prose-slate max-w-none">
+          <pre class="bg-slate-900 border border-slate-700 rounded-lg p-4 overflow-x-auto text-sm leading-relaxed"><code>{section.content}</code></pre>
+        </div>
+      </section>
+    ))}
+  </div>
+</article>
+
+<style>
+  article {
+    max-width: 100%;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+</style>

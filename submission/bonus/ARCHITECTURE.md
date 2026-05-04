@@ -1,6 +1,6 @@
 # Architecture: CDC Lakehouse cho Ride-Hailing Việt Nam — Tuân thủ Decree 13
 
-**Author:** Architecture Team
+**Author:** 2A202600495- TRẦN ĐÌNH MINH VƯƠNG
 **Topic:** C — CDC từ ride-hailing Việt Nam → Lakehouse (tuân thủ Decree 13)
 **Format:** Architecture brief cho design review
 **Version:** 1.0

@@ -1,0 +1,10 @@
+=== NB1 Criterion 1: Delta table + _delta_log/ JSON files ===
+_delta_log files: ['00000000000000000000.json']
+history() versions: 1
+
+=== NB1 Criterion 2: Schema enforcement blocks age=str ===
+Schema enforcement BLOCKED: Cannot cast schema, number of fields does not match: 4 vs 3
+
+=== NB1 Criterion 3: schema_mode=merge adds tier column ===
+Columns after merge: ['id', 'msg', 'ts', 'tier']
+tier column present: True

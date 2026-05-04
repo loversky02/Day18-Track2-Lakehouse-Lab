@@ -1,0 +1,16 @@
+Creating 200 small files...
+
+=== NB2 Criterion 1: Small-file problem ===
+Files before OPTIMIZE: 200  (target >= 100)
+BEFORE OPTIMIZE            count=5  median= 160.5 ms
+
+=== NB2 Criterion 2: OPTIMIZE + Z-ORDER ===
+Files after OPTIMIZE+ZORDER: 55
+AFTER OPTIMIZE+ZORDER      count=5  median=  12.1 ms
+
+Speedup: 13.2x  (target >= 3x)
+Files-pruned ratio: 55.0x  (target >= 10x)
+[1 of 55 files cover user_id=4242]
+
+=== NB2 Criterion 3: File count decreased ===
+Files: 200 -> 55  (4x fewer)
